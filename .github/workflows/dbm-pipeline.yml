@@ -38,7 +38,7 @@ jobs:
 
       - name: Log Branch Name 
         run: | 
-            BRANCH_NAME=$(git log -1 --pretty=format:'%s' | sed 's/^Merge branch //;s/ into.*//') 
+            BRANCH_NAME=$(git log -1 --pretty=format:'%s' | sed 's/^Merge branch //;s/ into.*//' | sed 's/origin\///')
             echo "Merged branch name: $BRANCH_NAME"
 
     
