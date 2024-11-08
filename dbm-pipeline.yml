@@ -1,0 +1,44 @@
+name: Deployment Workflow
+
+env:
+  RUNNERS_OPTIONS: -c cookies=enabled
+  DBMprojectName: "BrdJiraGitHub"
+  DBMauthType: "DBmaestroAccount"
+  DBMuserName: "su@dbmaestro.com"
+  DBMserver: "SER1:8017"
+  local_path: "./packages/packages"
+  agent_jar_parent_path: "./agentjar"
+  agent_jar_path: "./agentjar/DBmaestroAgent.jar"
+  new_state: ${{ github.event.client_payload.new_state_id}}
+  #workflowstates
+  READY_TO_REVIEW_STATUS_ID: '10004'
+  
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  # Job executed for Package Precheck. 
+  # Triggered when a pull request is merged into Dev branch 
+  precheck:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout packages code
+        uses: actions/checkout@v4
+        with: 
+          ref: dev
+          
+      - name: Get DBMaestroAgent.jar file
+        # Obtains the DBMaestroAgent.jar from the repository
+        #uses: DBMaestroDev/dbm_github_actions/get-dbmagent-jar@v2
+        uses: sergioldbm/dbm-agent-jar-action@v2.0.2
+        with: 
+          version: "v24.1.0.11442"
+          target_path: ${{ env.agent_jar_parent_path }} 
+
+      - name: Log Branch Name 
+        run: | 
+            BRANCH_NAME=$(git log -1 --pretty=format:'%s' | sed 's/^Merge branch //;s/ into.*//') 
+            echo "Merged branch name: $BRANCH_NAME"
+
+    
