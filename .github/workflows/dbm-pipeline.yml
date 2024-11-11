@@ -7,7 +7,7 @@ env:
   DBMuserName: "su@dbmaestro.com"
   DBMserver: "localhost:8017"
   packages_path: "./packages"
-  
+
   agent_jar_parent_path: "./agentjar"
   agent_jar_path: "./agentjar/DBmaestroAgent.jar"
 
@@ -19,9 +19,9 @@ on:
     inputs:
       package_name:
         description: "Package folder name where the scripts to be deployed are located"
-  push:
-    branches:
-      - dev
+  #push:
+  #  branches:
+  #    - dev
 jobs:
   # Job executed for Package Precheck. 
   # Triggered when a pull request is merged into Dev branch 
