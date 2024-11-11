@@ -52,7 +52,7 @@ jobs:
             echo "Package Path $PACKAGE_PATH"
             ZIP_PATH="${{ env.packages_path }}/${{ env.package_name }}/${{ env.package_name }}.zip" 
             java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH" 
-            zip -r "$ZIP_PATH" "$PACKAGE_PATH" 
+            tar -czvf "$ZIP_PATH.tar.gz" -C "$PACKAGE_PATH"
             java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ secrets.DBMauthToken }}"
 
     
