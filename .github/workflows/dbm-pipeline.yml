@@ -2,19 +2,23 @@ name: Deployment Workflow
 
 env:
   RUNNERS_OPTIONS: -c cookies=enabled
-  DBMprojectName: "BrdJiraGitHub"
+  DBMprojectName: "DBM-CICD"
   DBMauthType: "DBmaestroAccount"
   DBMuserName: "su@dbmaestro.com"
-  DBMserver: "SER1:8017"
-  local_path: "./packages/packages"
+  DBMserver: "localhost:8017"
+  packages_path: "./packages"
+  
   agent_jar_parent_path: "./agentjar"
   agent_jar_path: "./agentjar/DBmaestroAgent.jar"
-  new_state: ${{ github.event.client_payload.new_state_id}}
+
   #workflowstates
   READY_TO_REVIEW_STATUS_ID: '10004'
   
 on:
   workflow_dispatch:
+    inputs:
+      package_name:
+        description: "Package folder name where the scripts to be deployed are located"
   push:
     branches:
       - dev
@@ -41,5 +45,13 @@ jobs:
         run: | 
             BRANCH_NAME=$(git log -1 --pretty=format:'%s' | sed 's/^Merge branch //;s/ into.*//' | sed 's/origin\///')
             echo "Merged branch name: $BRANCH_NAME"
+
+      - name: Create Package
+        run: |
+            PACKAGE_PATH="${{ env.local_path }}/${{ github.event.client_payload.package_name }}" 
+            ZIP_PATH="${{ env.local_path }}/${{ github.event.client_payload.package_name }}.zip" 
+            java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH" 
+            zip -r "$ZIP_PATH" "$PACKAGE_PATH" 
+            java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ secrets.DBMauthToken }}"
 
     
