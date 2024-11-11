@@ -6,9 +6,9 @@ env:
   DBMauthType: "DBmaestroAccount"
   DBMuserName: "su@dbmaestro.com"
   DBMserver: "localhost:8017"
-  packages_path: "/packages"
+  packages_path: "./packages/"
 
-  agent_jar_parent_path: "./agentjar"
+  agent_jar_parent_path: "./agentjar/"
   agent_jar_path: "./agentjar/DBmaestroAgent.jar"
 
   #workflowstates
@@ -48,10 +48,10 @@ jobs:
 
       - name: Create Package
         run: |
-            PACKAGE_PATH="${{ env.packages_path }}/${{ env.package_name }}/" 
+            PACKAGE_PATH="${{ env.packages_path }}${{ github.event.inputs.package_name }}/" 
             echo "Package Path $PACKAGE_PATH"
             java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH" 
-            ZIP_PATH="${{ env.packages_path }}/${{ env.package_name }}/${{ env.package_name }}.zip" 
+            ZIP_PATH="${{ env.packages_path }}${{ github.event.inputs.package_name }}/${{ github.event.inputs.package_name }}.zip" 
             tar -czvf "$ZIP_PATH.tar.gz" -C "$PACKAGE_PATH"
             java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ secrets.DBMauthToken }}"
 
