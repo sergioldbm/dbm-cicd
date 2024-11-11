@@ -2,11 +2,11 @@ name: Deployment Workflow
 
 env:
   RUNNERS_OPTIONS: -c cookies=enabled
-  DBMprojectName: "DBM-CICD"
+  DBMprojectName: "GithubCICD"
   DBMauthType: "DBmaestroAccount"
   DBMuserName: "su@dbmaestro.com"
   DBMauthToken: "zhsiecDKHTGeZBodgykvX1O5H0E5YzaI"
-  DBMserver: "localhost:8017"
+  DBMserver: "SER1:8017"
   packages_path: "./packages/"
 
   agent_jar_parent_path: "./agentjar/"
@@ -52,6 +52,7 @@ jobs:
             java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH" 
             ZIP_PATH="${{ env.packages_path }}${{ github.event.inputs.package_name }}/${{ github.event.inputs.package_name }}.zip" 
             zip -r "$ZIP_PATH" "$PACKAGE_PATH"
+            echo 'java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"'
             java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
     
