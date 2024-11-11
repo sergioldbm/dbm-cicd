@@ -12,9 +12,7 @@ env:
   agent_jar_parent_path: "./agentjar/"
   agent_jar_path: "./agentjar/DBmaestroAgent.jar"
 
-  #workflowstates
-  READY_TO_REVIEW_STATUS_ID: '10004'
-  
+ 
 on:
   workflow_dispatch:
     inputs:
