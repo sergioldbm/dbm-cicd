@@ -50,8 +50,9 @@ jobs:
             PACKAGE_PATH="${{ env.packages_path }}${{ github.event.inputs.package_name }}/" 
             echo "Package Path $PACKAGE_PATH"
             java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH" 
-            ZIP_PATH="${{ env.packages_path }}${{ github.event.inputs.package_name }}.zip" 
-            zip -rj "$ZIP_PATH" "$PACKAGE_PATH"
+            ZIP_PATH="${{ github.event.inputs.package_name }}.zip" 
+            cd "${{ env.packages_path }}"
+            zip -r "$ZIP_PATH" "${{ env.packages_path }}"
             echo 'java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"'
             java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
