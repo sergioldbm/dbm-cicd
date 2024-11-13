@@ -56,15 +56,15 @@ jobs:
 #            java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
       - name: Create Package
-          uses: sergioldbm/dbm-github-action@latest
-          with:
-            package_name: ${{ env.DBMprojectName }}
-            packages_path: ${{ env.packages_path }}
-            project_id: ${{ inputs.package_name }}
-            server: ${{ env.DBMserver }}
-            user_name: ${{ env.DBMuserName }}
-            password: ${{ env.DBMauthToken }}
-            jar_path: ${{ env.agent_jar_path }}
+        uses: sergioldbm/dbm-github-action@latest
+        with:
+          package_name: ${{ env.DBMprojectName }}
+          packages_path: ${{ env.packages_path }}
+          project_id: ${{ inputs.package_name }}
+          server: ${{ env.DBMserver }}
+          user_name: ${{ env.DBMuserName }}
+          password: ${{ env.DBMauthToken }}
+          jar_path: ${{ env.agent_jar_path }}
 
       - name: Upgrade RS
         run: 
