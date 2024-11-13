@@ -58,9 +58,9 @@ jobs:
       - name: Create Package
         uses: sergioldbm/dbm-github-action@v1.0.3
         with:
-          package_name: ${{ env.package_name }}
+          package_name: ${{ inputs.package_name }}
           packages_path: ${{ env.packages_path }}
-          project_id: ${{ inputs.DBMprojectName }}
+          project_id: ${{ env.DBMprojectName }}
           server: ${{ env.DBMserver }}
           user_name: ${{ env.DBMuserName }}
           password: ${{ env.DBMauthToken }}
