@@ -35,7 +35,7 @@ jobs:
       - name: Get DBMaestroAgent.jar file
         # Obtains the DBMaestroAgent.jar from the repository
         #uses: DBMaestroDev/dbm_github_actions/get-dbmagent-jar@v2
-        uses: sergioldbm/dbm-agent-jar-action@v2.0.2
+        uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
         with: 
           version: "v24.1.0.11442"
           target_path: ${{ env.agent_jar_parent_path }} 
@@ -56,7 +56,7 @@ jobs:
 #            java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
       - name: Create Package
-        uses: sergioldbm/dbm-github-action@v1.0.3
+        uses: dbmaestrodev/dbm-github-actions/dbm-create-package@latest
         with:
           package_name: ${{ inputs.package_name }}
           packages_path: ${{ env.packages_path }}
