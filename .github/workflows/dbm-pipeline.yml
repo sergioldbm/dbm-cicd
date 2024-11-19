@@ -34,7 +34,6 @@ jobs:
           
       - name: Get DBMaestroAgent.jar file
         # Obtains the DBMaestroAgent.jar from the repository
-        #uses: DBMaestroDev/dbm_github_actions/get-dbmagent-jar@v2
         uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
         with: 
           version: "v24.1.0.11442"
@@ -68,4 +67,5 @@ jobs:
 
       - name: Upgrade RS
         run: 
-            java -jar "${{ env.agent_jar_path }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName "${{ github.event.inputs.package_name }}" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+            var1=(java -jar "${{ env.agent_jar_path }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName "${{ github.event.inputs.package_name }}" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}")
+            echo "$var1"
