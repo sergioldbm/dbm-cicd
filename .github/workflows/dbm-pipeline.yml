@@ -66,6 +66,6 @@ jobs:
           jar_path: ${{ env.agent_jar_path }}
 
       - name: Upgrade RS
-        run: 
+        run: |
             var1=(java -jar "${{ env.agent_jar_path }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName "${{ github.event.inputs.package_name }}" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}")
             echo "$var1"
