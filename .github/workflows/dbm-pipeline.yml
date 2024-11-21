@@ -68,6 +68,7 @@ jobs:
       - name: Upgrade RS
         shell: bash
         run: |
-            command=$(java -jar "${{ env.agent_jar_path }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName "${{ github.event.inputs.package_name }}" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}" 2>&1 | tee /dev/tty ) 
+            command=$(java -jar "${{ env.agent_jar_path }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName "${{ github.event.inputs.package_name }}" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}" 2>&1 ) 
             exit_code=$?
+            echo "$command"
             echo "$exit_code"
