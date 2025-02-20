@@ -1,1 +1,1 @@
-
+Sample Github Actions pipeline.
