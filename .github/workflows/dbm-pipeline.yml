@@ -36,7 +36,7 @@ jobs:
         # Obtains the DBMaestroAgent.jar from the repository
         uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
         with: 
-          version: "v24.1.0.11442"
+          version: "v23.4.2.11298"
           target_path: ${{ env.agent_jar_parent_path }} 
 
 #      - name: Log Branch Name 
