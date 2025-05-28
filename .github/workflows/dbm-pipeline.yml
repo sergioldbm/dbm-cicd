@@ -45,8 +45,7 @@ jobs:
             echo "Package Path $PACKAGE_PATH"
             java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH" 
             ZIP_PATH="${{ env.packages_path }}${{ inputs.package_name }}.tar" 
-            tar -cvf "$ZIP_PATH" "${{ env.packages_path }}${{ github.event.inputs.package_name }}"
-            tar -tvf "$ZIP_PATH"
+            tar -cvf "$ZIP_PATH" -C "${{ env.packages_path }}" ${{ github.event.inputs.package_name }}
             echo 'java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "${{ env.packages_path }}${{ github.event.inputs.package_name }}.tar" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"'
             java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
