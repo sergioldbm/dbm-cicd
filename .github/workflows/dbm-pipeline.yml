@@ -1,4 +1,4 @@
-name: Deployment Workflow
+name: Deployment Workflow Dev
 
 env:
   RUNNERS_OPTIONS: -c cookies=enabled
