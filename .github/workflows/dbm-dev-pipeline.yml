@@ -1,0 +1,59 @@
+name: Deployment Workflow
+
+env:
+  RUNNERS_OPTIONS: -c cookies=enabled
+  DBMprojectName: "GithubCICD"
+  DBMauthType: "DBmaestroAccount"
+  DBMuserName: "su@dbmaestro.com"
+  DBMauthToken: "xe1lwMC1tT5thurFSnjkoLNq2N32QPqY"
+  DBMserver: "localhost:8017"
+  packages_path: "./packages/"
+  db_name: "db1"
+  agent_jar_parent_path: "./agentjar/"
+  agent_jar_path: "./agentjar/DBmaestroAgent.jar"
+
+ 
+on:
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: "Package folder name where the scripts to be deployed are located"
+  #push:
+  #  branches:
+  #    - dev
+jobs:
+  # Job executed for Package Precheck. 
+  # Triggered when a pull request is merged into Dev branch 
+  precheck:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout packages code
+        uses: actions/checkout@v4
+        with: 
+          ref: dev
+          
+      - name: Get DBMaestroAgent.jar file
+        # Obtains the DBMaestroAgent.jar from the repository
+        uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
+        with: 
+          version: "v23.4.2.11298"
+          target_path: ${{ env.agent_jar_parent_path }} 
+
+      - name: Create Package
+        run: |
+            PACKAGE_PATH="${{ env.packages_path }}${{ github.event.inputs.package_name }}/" 
+            echo "Package Path $PACKAGE_PATH"
+            java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH" -PackageType "AdHoc"
+            ZIP_PATH="${{ env.packages_path }}${{ inputs.package_name }}.tar" 
+            tar -cvf "$ZIP_PATH" -C "${{ env.packages_path }}" ${{ github.event.inputs.package_name }}
+            echo 'java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "${{ env.packages_path }}${{ github.event.inputs.package_name }}.tar" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"'
+            java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+
+      - name: Deploy to Dev
+        shell: bash
+        run: |
+            set +e
+            java -jar "${{ env.agent_jar_path }}" -RunPackageDev -ProjectName ${{ env.DBMprojectName }} -EnvName "Dev_Env_1" -PackageName ${{ inputs.package_name }}  -ScriptType "Upgrade" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}" 2>&1 )
+
+
+
