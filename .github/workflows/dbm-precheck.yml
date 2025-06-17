@@ -1,4 +1,4 @@
-name: Deployment Workflow RS
+name: Precheck
 
 env:
   RUNNERS_OPTIONS: -c cookies=enabled
