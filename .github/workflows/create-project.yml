@@ -27,18 +27,19 @@ jobs:
   import-project:
     runs-on: self-hosted
     steps:
-      - name: Get DBMaestroAgent.jar file
-        # Obtains the DBMaestroAgent.jar from the repository
-        uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
-        with: 
-          version: "v23.4.2.11298"
-          target_path: ${{ env.agent_jar_parent_path }} 
+
 
 
       - name: Checkout packages code
         uses: actions/checkout@v4
         with: 
-          ref: main          
+          ref: main  
+      - name: Get DBMaestroAgent.jar file
+      # Obtains the DBMaestroAgent.jar from the repository
+        uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
+        with: 
+          version: "v23.4.2.11298"
+          target_path: ${{ env.agent_jar_parent_path }}         
       - name: Echo
         run: |
           pwd
