@@ -24,7 +24,7 @@ on:
 jobs:
   # Job executed for Package Precheck. 
   # Triggered when a pull request is merged into Dev branch 
-  precheck:
+  import-project:
     runs-on: self-hosted
     steps:
       - name: Get DBMaestroAgent.jar file
