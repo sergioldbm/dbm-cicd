@@ -34,6 +34,11 @@ jobs:
           version: "v23.4.2.11298"
           target_path: ${{ env.agent_jar_parent_path }} 
 
+      - name: Echo
+        run: |
+          pwd
+          ls -la
+
       - name: Update package.json version
         uses: restackio/update-json-file-action@2.1
         with:
