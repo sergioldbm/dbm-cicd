@@ -42,7 +42,7 @@ jobs:
       - name: Update package.json version
         uses: restackio/update-json-file-action@2.1
         with:
-          file: /home/sergio/projectimport.json
+          file: projectimport.json
           fields: "{\"ProjectName\":\"ImportProject\"}"
 
       - name: Create Project
