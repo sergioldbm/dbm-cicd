@@ -1,4 +1,4 @@
-name: Precheck
+name: Create Project
 
 env:
   RUNNERS_OPTIONS: -c cookies=enabled
