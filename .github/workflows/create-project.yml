@@ -42,6 +42,6 @@ jobs:
 
       - name: Create Project
         run: |
-          java -jar "${{ env.agent_jar_path }}" -ImportProject -FilePath "./home/sergio/projectimport.json" -Server "SER1:8017" -AuthType DBmaestroAccount -UserName "su@dbmaestro.com" -Password "xe1lwMC1tT5thurFSnjkoLNq2N32QPqY"
+          java -jar "${{ env.agent_jar_path }}" -ImportProject -FilePath "./home/sergio/projectimport.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
             
 
