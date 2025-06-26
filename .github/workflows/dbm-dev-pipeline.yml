@@ -10,7 +10,7 @@ env:
   packages_path: "./packages/"
   db_name: "db1"
   agent_jar_parent_path: "./agentjar/"
-  agent_jar_path: "./agentjar/DBmaestroAgent.jar"
+  agent_jar_path: "/home/sergio/actions-runner2/_work/dbm-cicd/dbm-cicd/agentjar/agentjar/DBmaestroAgent.jar"
 
  
 on:
