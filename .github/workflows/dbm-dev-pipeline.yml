@@ -6,7 +6,7 @@ env:
   DBMauthType: "DBmaestroAccount"
   DBMuserName: "su@dbmaestro.com"
   DBMauthToken: "xe1lwMC1tT5thurFSnjkoLNq2N32QPqY"
-  DBMserver: "localhost:8017"
+  DBMserver: "192.168.68.110:8017"
   packages_path: "./packages/"
   db_name: "db1"
   agent_jar_parent_path: "./agentjar/"
