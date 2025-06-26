@@ -38,7 +38,7 @@ jobs:
         uses: restackio/update-json-file-action@2.1
         with:
           file: /home/sergio/projectimport.json
-          fields: "{'ProjectName':'ImportProject'}"
+          fields: "{\"ProjectName\":\"ImportProject\"}"
 
       - name: Create Project
         run: |
