@@ -42,11 +42,11 @@ jobs:
       - name: Update package.json version
         uses: restackio/update-json-file-action@2.1
         with:
-          file: ./projectimport.json
+          file: projectimport.json
           fields: "{\"ProjectName\":\"ImportProject\"}"
 
       - name: Create Project
         run: |
-          java -jar "${{ env.agent_jar_path }}" -ImportProject -FilePath "./projectimport.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+          java -jar "${{ env.agent_jar_path }}" -ImportProject -FilePath "projectimport.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
             
 
