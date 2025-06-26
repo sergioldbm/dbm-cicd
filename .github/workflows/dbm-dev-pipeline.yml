@@ -50,7 +50,6 @@ jobs:
             java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
       - name: Deploy to Dev
-        shell: bash
         run: |
             java -jar "${{ env.agent_jar_path }}" -RunPackageDev -ProjectName ${{ env.DBMprojectName }} -EnvName "Dev_Env_1" -PackageName ${{ inputs.package_name }}  -ScriptType "Upgrade" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}" 
 
