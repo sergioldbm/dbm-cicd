@@ -51,7 +51,7 @@ jobs:
 
           updated=$(echo "$template" | jq '
             .ProjectName = "NewProject" |
-            .DatabaseType = "MS-SQLArgentina" 
+            .DatabaseType = "MS-SQL" 
           ')
 
           echo "$updated" > projectimport.json
