@@ -47,14 +47,14 @@ jobs:
 
       - name: Create Project
         run: |
-          template=$(<projectimport.json)
+          template=$(<export.json)
 
           updated=$(echo "$template" | jq '
             .ProjectName = "NewProject" |
             .DatabaseType = "MS-SQL" 
           ')
 
-          echo "$updated" > projectimport.json
-          java -jar "${{ env.agent_jar_path }}" -ImportProject -FilePath "projectimport.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+          echo "$updated" > import.json
+          java -jar "${{ env.agent_jar_path }}" -ImportProject -FilePath "import.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
             
 
