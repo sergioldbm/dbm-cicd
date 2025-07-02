@@ -1,8 +1,8 @@
 {
   "ProjectGroupId": null,
   "ProjectId": null,
-  "ProjectName": "ImportMsSql",
-  "Description": "",
+  "ProjectName": null,
+  "Description": "opcional",
   "ProjectType": "deploy by tasks",
   "AutoImportScript": false,
   "AutoImportScriptInterval": 0.0,
@@ -189,10 +189,10 @@
           "SuperUser": null,
           "Schemas": [
             {
-              "Name": "DM_DEV",
+              "Name": "TR_DEV",
               "SchemaCredentials": {
-                "password": "sergio",
-                "dbName": "DM_DEV",
+                "password": "1q2w3e4R",
+                "dbName": "TR_DEV",
                 "host": "localhost",
                 "authType": "1",
                 "userName": "sergio",
@@ -213,33 +213,7 @@
     },
     {
       "Name": "DryRun",
-      "Environments": [
-        {
-          "EnvironmentId": null,
-          "EnvironmentName": "DryRun",
-          "EnvironmentDescription": null,
-          "SuperUser": null,
-          "Schemas": [
-            {
-              "Name": "DM_DR",
-              "SchemaCredentials": {
-                "password": "sergio",
-                "dbName": "DM_DR",
-                "host": "localhost",
-                "authType": "1",
-                "userName": "sergio",
-                "vaultId": 0,
-                "vaultName": null
-              },
-              "Order": 1,
-              "SchemaId": null,
-              "IsManaged": false,
-              "IsSuperUser": false
-            }
-          ],
-          "GitRepositoryBranch": ""
-        }
-      ],
+      "Environments": [],
       "DriftDetection": false,
       "SchemaRepositories": null
     },
@@ -253,10 +227,10 @@
           "SuperUser": null,
           "Schemas": [
             {
-              "Name": "DM_RS",
+              "Name": "TR_RS",
               "SchemaCredentials": {
-                "password": "sergio",
-                "dbName": "DM_RS",
+                "password": "1q2w3e4R",
+                "dbName": "TR_RS",
                 "host": "localhost",
                 "authType": "1",
                 "userName": "sergio",
@@ -309,10 +283,10 @@
           "SuperUser": null,
           "Schemas": [
             {
-              "Name": "DM_PROD",
+              "Name": "TR_PROD",
               "SchemaCredentials": {
-                "password": "sergio",
-                "dbName": "DM_PROD",
+                "password": "1q2w3e4R",
+                "dbName": "TR_PROD",
                 "host": "localhost",
                 "authType": "1",
                 "userName": "sergio",
@@ -332,7 +306,32 @@
       "SchemaRepositories": null
     }
   ],
-  "Hooks": [],
+  "Hooks": [
+    {
+      "Id": 20,
+      "ParentId": 0,
+      "ModelName": "BatchFileHook",
+      "ActionName": "Run Batch File",
+      "FailJobOnFailure": false,
+      "Timeout": 5,
+      "LoginDomain": null,
+      "LoginUser": null,
+      "LoginPassword": null,
+      "Events": [
+        "Validate Environment"
+      ],
+      "Step": [
+        "Before"
+      ],
+      "EnvTypes": [
+        "All"
+      ],
+      "Environments": [],
+      "AdditionalOption": {
+        "BatchFile": "C:\\Temp\\hook\\hook"
+      }
+    }
+  ],
   "BackupSettings": [
     {
       "Env": null,
