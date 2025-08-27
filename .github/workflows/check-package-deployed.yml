@@ -44,7 +44,7 @@ jobs:
             FILE_PATH="./RSPackages.json"
             
             # This command generates the JSON file that the next command will read.
-            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FromDate "6/1/25 0:00 AM" -FilePath "$FILE_PATH"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FromDate "6/1/25 1:01 AM" -FilePath "$FILE_PATH"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
             # Check if the file exists
             if [ ! -f "$FILE_PATH" ]; then
