@@ -1,0 +1,75 @@
+name: Check Package Deployed RS
+
+env:
+  RUNNERS_OPTIONS: -c cookies=enabled
+  DBMprojectName: "GithubCICD"
+  DBMauthType: "DBmaestroAccount"
+  DBMuserName: "su@dbmaestro.com"
+  DBMauthToken: "xe1lwMC1tT5thurFSnjkoLNq2N32QPqY"
+  DBMserver: "localhost:8017"
+  packages_path: "./packages/"
+  db_name: "db1"
+  agent_jar_parent_path: "./agentjar/"
+  agent_jar_path: "./agentjar/DBmaestroAgent.jar"
+
+ 
+on:
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: "Package folder name where the scripts to be deployed are located"
+  #push:
+  #  branches:
+  #    - dev
+jobs:
+  # Job executed for Package Precheck. 
+  # Triggered when a pull request is merged into Dev branch 
+  precheck:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout packages code
+        uses: actions/checkout@v4
+        with: 
+          ref: main
+          
+      - name: Get DBMaestroAgent.jar file
+        # Obtains the DBMaestroAgent.jar from the repository
+        uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
+        with: 
+          version: "v23.4.2.11298"
+          target_path: ${{ env.agent_jar_parent_path }} 
+
+      - name: Check if package is deployed in RS
+        id: package_is_deployed
+        run: |
+            FILE_PATH="deployed_packages.json"
+            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FromDate "2025-05-01" -FilePath "./RSPackages.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+            # The path to your JSON file
+            # The value to check against the "VersionName" property
+            SEARCH_VALUE=${{ inputs.package_name }}
+  
+            # Check if the file exists
+            if [ ! -f "$FILE_PATH" ]; then
+              echo "::error file=$FILE_PATH::File not found."
+              echo "is_deployed=false" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+  
+            # Use jq to check if any object has a VersionName
+            # that starts with the given value.
+            # The `any` function returns true if the condition is met for any element.
+            MATCH=$(cat "$FILE_PATH" | jq --raw-output "any(.[] ; .VersionName | startswith(\"$SEARCH_VALUE\"))")
+  
+            # Set the output based on the result from jq
+            echo "is_deployed=$MATCH" >> $GITHUB_OUTPUT
+  
+      - name: Conditionally run step if version matches
+        if: steps.package_is_deployed.outputs.is_deployed == 'true'
+        run: |
+          echo "The Package ${{ inputs.package_name }} is deployed in RS environment."
+  
+      - name: Conditionally run step if version matches
+        if: steps.package_is_deployed.outputs.is_deployed == 'false'
+        run: |
+          echo "The Package ${{ inputs.package_name }} is not deployed in RS environment."
+
