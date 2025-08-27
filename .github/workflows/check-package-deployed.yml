@@ -23,7 +23,7 @@ on:
 jobs:
   # Job executed for Package Precheck. 
   # Triggered when a pull request is merged into Dev branch 
-  precheck:
+  package-is-deployed:
     runs-on: self-hosted
     steps:
       - name: Checkout packages code
