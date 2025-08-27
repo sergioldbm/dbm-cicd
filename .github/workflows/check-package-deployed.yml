@@ -43,9 +43,7 @@ jobs:
         id: package_is_deployed
         run: |
             FILE_PATH="deployed_packages.json"
-            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FromDate "2025-05-01" -FilePath "./RSPackages.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
-            # The path to your JSON file
-            # The value to check against the "VersionName" property
+            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FromDate ""6/1/25 0:00 AM" -FilePath "./RSPackages.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
             SEARCH_VALUE=${{ inputs.package_name }}
   
             # Check if the file exists
@@ -57,7 +55,6 @@ jobs:
   
             # Use jq to check if any object has a VersionName
             # that starts with the given value.
-            # The `any` function returns true if the condition is met for any element.
             MATCH=$(cat "$FILE_PATH" | jq --raw-output "any(.[] ; .VersionName | startswith(\"$SEARCH_VALUE\"))")
   
             # Set the output based on the result from jq
