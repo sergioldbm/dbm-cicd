@@ -44,7 +44,7 @@ jobs:
             FILE_PATH="./RSPackages.json"
             
             # This command generates the JSON file that the next command will read.
-            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FilePath "$FILE_PATH"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FilePath "$FILE_PATH" -FromDate '6/1/25 0:00 AM' -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
 
             # Check if the file exists
             if [ ! -f "$FILE_PATH" ]; then
@@ -53,9 +53,7 @@ jobs:
               exit 1
             fi
 
-            # Use jq to check if any object has a VersionName
-            # that starts with the given value.
-            # We use --arg to securely pass the input to jq
+            # Use jq to check if any object has a VersionName that starts with the given value.
             MATCH=$(cat "$FILE_PATH" | jq --raw-output --arg SEARCH_VALUE "${{ inputs.package_name }}" 'any(.[] ; .VersionName | startswith($SEARCH_VALUE))')
 
             # Set the output based on the result from jq
