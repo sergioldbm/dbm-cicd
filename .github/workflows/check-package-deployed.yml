@@ -12,7 +12,6 @@ env:
   agent_jar_parent_path: "./agentjar/"
   agent_jar_path: "./agentjar/DBmaestroAgent.jar"
 
- 
 on:
   workflow_dispatch:
     inputs:
@@ -42,31 +41,32 @@ jobs:
       - name: Check if package is deployed in RS
         id: package_is_deployed
         run: |
-            FILE_PATH="deployed_packages.json"
-            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FromDate ""6/1/25 0:00 AM" -FilePath "./RSPackages.json"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
-            SEARCH_VALUE=${{ inputs.package_name }}
-  
+            FILE_PATH="./RSPackages.json"
+            
+            # This command generates the JSON file that the next command will read.
+            java -jar "${{ env.agent_jar_path }}" -GetEnvPackages  -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -FromDate "6/1/25 0:00 AM" -FilePath "$FILE_PATH"  -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+
             # Check if the file exists
             if [ ! -f "$FILE_PATH" ]; then
               echo "::error file=$FILE_PATH::File not found."
               echo "is_deployed=false" >> $GITHUB_OUTPUT
               exit 1
             fi
-  
+
             # Use jq to check if any object has a VersionName
             # that starts with the given value.
-            MATCH=$(cat "$FILE_PATH" | jq --raw-output "any(.[] ; .VersionName | startswith(\"$SEARCH_VALUE\"))")
-  
+            # We use --arg to securely pass the input to jq
+            MATCH=$(cat "$FILE_PATH" | jq --raw-output --arg SEARCH_VALUE "${{ inputs.package_name }}" 'any(.[] ; .VersionName | startswith($SEARCH_VALUE))')
+
             # Set the output based on the result from jq
             echo "is_deployed=$MATCH" >> $GITHUB_OUTPUT
-  
-      - name: Conditionally run step if version matches
+
+      - name: Log success if package is deployed
         if: steps.package_is_deployed.outputs.is_deployed == 'true'
         run: |
           echo "The Package ${{ inputs.package_name }} is deployed in RS environment."
-  
-      - name: Conditionally run step if version matches
+
+      - name: Log failure if package is not deployed
         if: steps.package_is_deployed.outputs.is_deployed == 'false'
         run: |
           echo "The Package ${{ inputs.package_name }} is not deployed in RS environment."
-
