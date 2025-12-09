@@ -7,7 +7,7 @@ env:
   DBMuserName: "su@dbmaestro.com"
   DBMauthToken: "NBLOZPSzmrzJZsqIVjHJMwWjQpCgPzde"
   DBMserver: "localhost:8017"
-  packages_path: "C:\\actions-runner\\_work\\dbm-cicd\\dbm-cicd\\packages\\" # Changed to Windows path separator
+  packages_path: "C:/actions-runner/_work/dbm-cicd/dbm-cicd/packages/" # Changed to Windows path separator
   db_name: "db1"
   agent_jar_parent_path: ".\\agentjar\\" # Changed to Windows path separator
   agent_jar_path: ".\\agentjar\\DBmaestroAgent.jar" 
@@ -46,7 +46,7 @@ jobs:
           java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder $PACKAGE_PATH
           
           # The following uses PowerShell's built-in Zip utility (Compress-Archive)
-          $ZIP_PATH = "${{ env.packages_path }}${{ inputs.package_name }}.zip"
+          $ZIP_PATH = "${{ env.packages_path }}${{ github.event.inputs.package_name }}.zip"
           Compress-Archive -Path "$PACKAGE_PATH" -DestinationPath $ZIP_PATH -Force
 
           # 4. Package the database scripts using the DBmaestro Agent
