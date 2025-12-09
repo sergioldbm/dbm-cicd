@@ -36,7 +36,7 @@ jobs:
           target_path: ${{ env.agent_jar_parent_path }}
 
       - name: Create Package
-        shell: powershell # Explicitly use PowerShell (Windows default)
+        shell: pwsh # Explicitly use PowerShell (Windows default)
         run: |
           # 1. Define and echo the package path
           $PACKAGE_PATH = "${{ env.packages_path }}${{ github.event.inputs.package_name }}"
