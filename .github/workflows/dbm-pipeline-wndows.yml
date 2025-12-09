@@ -43,13 +43,12 @@ jobs:
           Write-Host "Package Path $PACKAGE_PATH"
           
           # 2. Create Manifest File
-          java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH"
+          java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder $PACKAGE_PATH
           
-          # 3. Create ZIP/TAR file. Note: Windows doesn't have native 'tar -cvf' equivalent for GitHub Actions.
           # The following uses PowerShell's built-in Zip utility (Compress-Archive)
           $ZIP_PATH = "${{ env.packages_path }}${{ inputs.package_name }}.zip"
-          Compress-Archive -Path "$PACKAGE_PATH" -DestinationPath $ZIP_PATH -CompressionLevel Optimal -Force
-          
+          Compress-Archive -Path "$PACKAGE_PATH" -DestinationPath $ZIP_PATH -Force
+
           # 4. Package the database scripts using the DBmaestro Agent
           $DBM_PACKAGE_CMD = 'java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"'
           Write-Host $DBM_PACKAGE_CMD
