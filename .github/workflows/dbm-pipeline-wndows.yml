@@ -1,0 +1,64 @@
+name: Deployment Workflow RS - Windows
+
+env:
+  RUNNERS_OPTIONS: -c cookies=enabled
+  DBMprojectName: "GithubCICD"
+  DBMauthType: "DBmaestroAccount"
+  DBMuserName: "su@dbmaestro.com"
+  DBMauthToken: "NBLOZPSzmrzJZsqIVjHJMwWjQpCgPzde"
+  DBMserver: "localhost:8017"
+  packages_path: ".\\packages\\" # Changed to Windows path separator
+  db_name: "db1"
+  agent_jar_parent_path: ".\\agentjar\\" # Changed to Windows path separator
+  agent_jar_path: ".\\agentjar\\DBmaestroAgent.jar" 
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_name:
+        description: "Package folder name where the scripts to be deployed are located"
+jobs:
+  # Job executed for Package Precheck.
+  precheck:
+    runs-on: windows-latest # Changed from self-hosted to the standard Windows runner
+    # Note: If your self-hosted runner IS Windows, keep 'runs-on: self-hosted'
+    steps:
+      - name: Checkout packages code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Get DBMaestroAgent.jar file
+        # Obtains the DBMaestroAgent.jar from the repository
+        uses: dbmaestrodev/dbm-github-actions/get-dbmagent-jar@latest
+        with:
+          version: "v23.4.2.11298"
+          target_path: ${{ env.agent_jar_parent_path }}
+
+      - name: Create Package
+        shell: pwsh # Explicitly use PowerShell (Windows default)
+        run: |
+          # 1. Define and echo the package path
+          $PACKAGE_PATH = "${{ env.packages_path }}${{ github.event.inputs.package_name }}\"
+          Write-Host "Package Path $PACKAGE_PATH"
+          
+          # 2. Create Manifest File
+          java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder "$PACKAGE_PATH"
+          
+          # 3. Create ZIP/TAR file. Note: Windows doesn't have native 'tar -cvf' equivalent for GitHub Actions.
+          # The following uses PowerShell's built-in Zip utility (Compress-Archive)
+          $ZIP_PATH = "${{ env.packages_path }}${{ inputs.package_name }}.zip"
+          Compress-Archive -Path "$PACKAGE_PATH" -DestinationPath $ZIP_PATH -CompressionLevel Optimal -Force
+          
+          # 4. Package the database scripts using the DBmaestro Agent
+          $DBM_PACKAGE_CMD = 'java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"'
+          Write-Host $DBM_PACKAGE_CMD
+          java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
+
+      - name: Upgrade RS
+        # Removed 'shell: bash' as PowerShell is the default
+        run: |
+          # The Java command is mostly cross-platform, but we ensure PowerShell syntax.
+          # Note: In PowerShell, you don't typically need 'set +e' to ignore errors, 
+          # but you can use '-IgnoreExitCode' or try/catch blocks if error handling is needed.
+          java -jar "${{ env.agent_jar_path }}" -Upgrade -ProjectName ${{ env.DBMprojectName }} -EnvName "Release Source" -PackageName ${{ inputs.package_name }} -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"
