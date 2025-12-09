@@ -7,7 +7,7 @@ env:
   DBMuserName: "su@dbmaestro.com"
   DBMauthToken: "NBLOZPSzmrzJZsqIVjHJMwWjQpCgPzde"
   DBMserver: "localhost:8017"
-  packages_path: "C:/actions-runner/_work/dbm-cicd/dbm-cicd/packages/" # Changed to Windows path separator
+  packages_path: "C:\\actions-runner\\_work\\dbm-cicd\\dbm-cicd\\packages\\" # Changed to Windows path separator
   db_name: "db1"
   agent_jar_parent_path: ".\\agentjar\\" # Changed to Windows path separator
   agent_jar_path: ".\\agentjar\\DBmaestroAgent.jar" 
