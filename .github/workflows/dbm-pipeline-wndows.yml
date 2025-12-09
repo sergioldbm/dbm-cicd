@@ -20,7 +20,7 @@ on:
 jobs:
   # Job executed for Package Precheck.
   precheck:
-    runs-on: windows-latest # Changed from self-hosted to the standard Windows runner
+    runs-on: self-hosted # Changed from self-hosted to the standard Windows runner
     # Note: If your self-hosted runner IS Windows, keep 'runs-on: self-hosted'
     steps:
       - name: Checkout packages code
