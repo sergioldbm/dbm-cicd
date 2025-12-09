@@ -5,7 +5,7 @@ env:
   DBMprojectName: "GithubCICD"
   DBMauthType: "DBmaestroAccount"
   DBMuserName: "su@dbmaestro.com"
-  DBMauthToken: "xe1lwMC1tT5thurFSnjkoLNq2N32QPqY"
+  DBMauthToken: "NBLOZPSzmrzJZsqIVjHJMwWjQpCgPzde"
   DBMserver: "localhost:8017"
   packages_path: "./packages/"
   db_name: "db1"
