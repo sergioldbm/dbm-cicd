@@ -2,7 +2,7 @@ name: Deployment Workflow RS - Windows
 
 env:
   RUNNERS_OPTIONS: -c cookies=enabled
-  DBMprojectName: "GithubCICD"
+  DBMprojectName: "GH_CICD"
   DBMauthType: "DBmaestroAccount"
   DBMuserName: "su@dbmaestro.com"
   DBMauthToken: "NBLOZPSzmrzJZsqIVjHJMwWjQpCgPzde"
