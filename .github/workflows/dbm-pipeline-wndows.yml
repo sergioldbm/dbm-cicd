@@ -39,7 +39,7 @@ jobs:
         shell: pwsh # Explicitly use PowerShell (Windows default)
         run: |
           # 1. Define and echo the package path
-          $PACKAGE_PATH = "${{ env.packages_path }}${{ github.event.inputs.package_name }}\"
+          $PACKAGE_PATH = "${{ env.packages_path }}${{ github.event.inputs.package_name }}"
           Write-Host "Package Path $PACKAGE_PATH"
           
           # 2. Create Manifest File
