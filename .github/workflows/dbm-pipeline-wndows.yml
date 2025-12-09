@@ -46,8 +46,10 @@ jobs:
           java -jar "${{ env.agent_jar_path }}" -CreateManifestFile -PathToScriptsFolder $PACKAGE_PATH
           
           # The following uses PowerShell's built-in Zip utility (Compress-Archive)
-          $ZIP_PATH = "${{ env.packages_path }}${{ github.event.inputs.package_name }}.zip"
+          $ZIP_PATH = "${{ env.packages_path }}${{ inputs.package_name }}.zip"
+          Write-Host "ZIP_PATH  $ZIP_PATH"
           Compress-Archive -Path "$PACKAGE_PATH" -DestinationPath $ZIP_PATH -Force
+          Write-Host "Compressed"
 
           # 4. Package the database scripts using the DBmaestro Agent
           $DBM_PACKAGE_CMD = 'java -jar "${{ env.agent_jar_path }}" -Package -ProjectName "${{ env.DBMprojectName }}" -IgnoreScriptWarnings True -FilePath "$ZIP_PATH" -Server "${{ env.DBMserver }}" -UseSSL False -AuthType DBmaestroAccount -UserName "${{ env.DBMuserName }}" -Password "${{ env.DBMauthToken }}"'
