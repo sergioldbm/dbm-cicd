@@ -8,6 +8,10 @@
 
 name: Git - Build Package
 
+permissions:
+  issues: write
+  pull-requests: write
+
 on:
   pull_request:
     branches:
@@ -17,7 +21,7 @@ env:
   GIT_DEPTH: 1
   AGENT_JAR: "C:\\Program Files (x86)\\DBmaestro\\DOP Server\\Agent\\DBmaestroAgent.jar"
   PROJECT_NAME: "GH_CICD"
-  DBMAESTRO_USE_SSL: "True"
+  DBMAESTRO_USE_SSL: "False"
   DBMAESTRO_SERVER: "${{ vars.DBMAESTRO_SERVER }}"
   DBMAESTRO_AUTH_TYPE: "DBmaestroAccount"
   DBMAESTRO_USER: "${{ secrets.DBMAESTRO_USER }}"
