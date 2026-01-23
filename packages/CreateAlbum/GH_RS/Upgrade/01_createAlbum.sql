@@ -4,4 +4,4 @@ CREATE TABLE [dbo].[Album]
     [Title] NVARCHAR(160) NOT NULL,
     [ArtistId] INT NOT NULL,
     CONSTRAINT [PK_Album] PRIMARY KEY CLUSTERED ([AlbumId])
-);
+); 
