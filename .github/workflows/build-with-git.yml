@@ -115,39 +115,45 @@ jobs:
       - name: Create Package
         shell: powershell -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
-          # ===== Create Package =====
-          Write-Host "==== Branch name: $env:PACKAGE_NAME ===="
-          Write-Host "==== Target branch: ${{ github.base_ref }} ===="
-          Write-Host "==== PR Number: ${{ github.event.pull_request.number }} ===="
-          Write-Host "==== Creating zip file from $env:PACKAGE_NAME ===="
+           # ===== Create Package =====
+            Write-Host "==== Branch name: $env:PACKAGE_NAME ===="
+            Write-Host "==== Target branch: ${{ github.base_ref }} ===="
+            Write-Host "==== PR Number: ${{ github.event.pull_request.number }} ===="
+            if (-not (Test-Path -Path ("packages\" + $env:PACKAGE_NAME) -PathType Container)) {
+              Write-Host "==== Folder $env:PACKAGE_NAME does not exist. ===="
+              exit 1
+            } else {
+              Write-Host "==== Found folder: $env:PACKAGE_NAME ===="
+            }
+            Write-Host "==== Creating manifest for package $env:PACKAGE_NAME ===="
 
-          if (-not (Test-Path -Path ("packages\" + $env:PACKAGE_NAME) -PathType Container)) {
-            Write-Host "==== Folder $env:PACKAGE_NAME does not exist. ===="
-            exit 1
-          } else {
-            Write-Host "==== Found folder: $env:PACKAGE_NAME ===="
-          }
+            & java -jar "$env:AGENT_JAR" -CreateManifestFile `
+                -PathToScriptsFolder "packages\$env:PACKAGE_NAME" `
+                -Operation "CreateOrUpdate" `
+                -PackageType "Regular"
 
-          Compress-Archive -Path (Join-Path ("packages\" + $env:PACKAGE_NAME) '*') `
-            -DestinationPath ($env:PACKAGE_NAME + ".zip") -Force
+            Write-Host "==== Creating zip file from $env:PACKAGE_NAME ===="
 
-          Write-Host "==== Create package $env:PACKAGE_NAME ===="
-          & java -jar "$env:AGENT_JAR" -Package `
-              -ProjectName "$env:PROJECT_NAME" `
-              -IgnoreScriptWarnings True `
-              -FilePath ($env:PACKAGE_NAME + ".zip") `
-              -Server "$env:DBMAESTRO_SERVER" `
-              -UseSSL "$env:DBMAESTRO_USE_SSL" `
-              -AuthType "$env:DBMAESTRO_AUTH_TYPE" `
-              -UserName "$env:DBMAESTRO_USER" `
-              -Password "$env:DBMAESTRO_PASSWORD"
+            Compress-Archive -Path "packages\$env:PACKAGE_NAME\*" `
+              -DestinationPath ($env:PACKAGE_NAME + ".zip") -Force
+
+            Write-Host "==== Create package $env:PACKAGE_NAME ===="
+            & java -jar "$env:AGENT_JAR" -Package `
+                -ProjectName "$env:PROJECT_NAME" `
+                -IgnoreScriptWarnings True `
+                -FilePath ($env:PACKAGE_NAME + ".zip") `
+                -Server "$env:DBMAESTRO_SERVER" `
+                -UseSSL "$env:DBMAESTRO_USE_SSL" `
+                -AuthType "$env:DBMAESTRO_AUTH_TYPE" `
+                -UserName "$env:DBMAESTRO_USER" `
+                -Password "$env:DBMAESTRO_PASSWORD"
 
 
-          if ($LASTEXITCODE -ne 0) {
-            Write-Host "==== Failed to create package ===="
-            exit 1
-          }
-          Write-Host "==== Create package completed successfully ===="
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "==== Failed to create package ===="
+              exit 1
+            }
+           Write-Host "==== Create package completed successfully ===="
 
       - name: Comment on PR - Package Created
         if: success()
