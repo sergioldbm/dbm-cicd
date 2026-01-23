@@ -11,7 +11,7 @@ name: Git - Build Package
 on:
   pull_request:
     branches:
-      - Release_Source
+      - integration
 
 env:
   GIT_DEPTH: 1
